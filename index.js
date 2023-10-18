@@ -36,6 +36,15 @@ async function run() {
 
         const allBrandCollection = client.db('brandProductDB').collection('brands');
 
+
+         // Display data READ/GET starts
+         app.get('/brands', async (req, res) => {
+            const cursor = allBrandCollection.find();
+            const result = await cursor.toArray([]);
+            res.send(result);
+        })
+        // Display data READ/GET ends
+
         // Backend CCREATE/POST starts
         app.post('/brands', async (req, res) => {
             const productAdded = req.body;
