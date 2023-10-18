@@ -32,11 +32,29 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         // Send a ping to confirm a successful connection
+
+
+        const allBrandCollection = client.db('brandProductDB').collection('brands');
+
+        // Backend CCREATE/POST starts
+        app.post('/brands', async (req, res) => {
+            const productAdded = req.body;
+            console.log(allBrandCollection);
+            const result = await allBrandCollection.insertOne(productAdded);
+            res.send(result);
+        })
+        // Backend CCREATE/POST ends
+
+
+
+
+
+
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        // await client.close();
     }
 }
 run().catch(console.dir);
