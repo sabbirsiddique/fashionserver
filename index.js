@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const app = express();
@@ -37,13 +37,24 @@ async function run() {
         const allBrandCollection = client.db('brandProductDB').collection('brands');
 
 
-         // Display data READ/GET starts
-         app.get('/brands', async (req, res) => {
+        // Display data READ/GET starts
+        app.get('/brands', async (req, res) => {
             const cursor = allBrandCollection.find();
             const result = await cursor.toArray([]);
             res.send(result);
         })
         // Display data READ/GET ends
+
+
+
+        app.get('/brands/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await allBrandCollection.findOne(query);
+            res.send(result);
+
+        })
 
         // Backend CCREATE/POST starts
         app.post('/brands', async (req, res) => {
@@ -53,6 +64,33 @@ async function run() {
             res.send(result);
         })
         // Backend CCREATE/POST ends
+
+
+
+        // Backend PUT starts
+        app.put('/brands/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedProduct = req.body;
+            const product = {
+                $set: {
+                    imgUrl: updatedProduct.imgUrl,
+                    brandName: updatedProduct.brandName,
+                    name: updatedProduct.name,
+                    type: updatedProduct.type,
+                    productImg: updatedProduct.productImg,
+                    shdetails: updatedProduct.shdetails,
+                    description: updatedProduct.description,
+                    price: updatedProduct.price,
+                    rating: updatedProduct.rating
+                }
+            }
+
+            const result = await allBrandCollection.updateOne(filter, product, options)
+            res.send(result);
+
+        })
 
 
 
