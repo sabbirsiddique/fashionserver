@@ -66,6 +66,16 @@ async function run() {
         // Backend CCREATE/POST ends
 
 
+         // Backend DELETE starts
+         app.delete('/brands/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await allBrandCollection.deleteOne(query);
+            res.send(result);
+        })
+        // Backend DELETE ends
+
+
 
         // Backend PUT starts
         app.put('/brands/:id', async (req, res) => {
